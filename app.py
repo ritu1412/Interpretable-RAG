@@ -11,6 +11,8 @@ from constants import OPENAI_API_KEY, EMBEDDING_MODEL, EMBEDDING_DIMENSIONS
 import openai
 import os
 import chromadb
+import nltk
+nltk.download('punkt')
 
 openai.api_key = OPENAI_API_KEY
 

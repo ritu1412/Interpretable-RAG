@@ -1,4 +1,5 @@
 import nltk
+nltk.download('punkt')
 
 def chunk_text_fixed_size(text, chunk_size=500):
     words = text.split()
