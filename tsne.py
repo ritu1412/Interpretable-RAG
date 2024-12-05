@@ -32,7 +32,6 @@ def plot_tsne(embeddings, highlighted_indices, num_chunks, query_index, response
 
     # reduce dimensions before t-SNE to speed up computation
     if pre_reduce_dim and n_features > 50:
-        # Adjust n_components based on n_samples and n_features
         n_components = min(50, n_samples - 1, n_features)
         pca = PCA(n_components=n_components, random_state=42)
         embeddings = pca.fit_transform(embeddings)
@@ -44,22 +43,27 @@ def plot_tsne(embeddings, highlighted_indices, num_chunks, query_index, response
     # Prepare data for Plotly
     labels = []
     colors = []
+    types = []
     for idx in range(n_samples):
         if idx == response_index:
             label = 'Response'
             color = 'green'
+            point_type = 'Response'
         elif idx == query_index:
             label = 'Query'
             color = 'red'
+            point_type = 'Query'
         elif idx in highlighted_indices[:-2]:
             label = f'Retrieved Chunk {idx}'
             color = 'blue'
+            point_type = 'Retrieved Chunk'
         else:
             label = f'Chunk {idx}'
             color = 'yellow'
+            point_type = 'Chunk'
         labels.append(label)
         colors.append(color)
-
+        types.append(point_type)
     # Create a DataFrame for plotting
     import pandas as pd
     df = pd.DataFrame({
@@ -67,6 +71,7 @@ def plot_tsne(embeddings, highlighted_indices, num_chunks, query_index, response
         'y': embeddings_2d[:, 1],
         'label': labels,
         'color': colors,
+        'type': types,  # For legend grouping
         'index': range(n_samples),
     })
 
@@ -75,18 +80,25 @@ def plot_tsne(embeddings, highlighted_indices, num_chunks, query_index, response
         df,
         x='x',
         y='y',
-        color='color',
+        color='type',  # Group by the descriptive type
         hover_data=['label', 'index'],
         color_discrete_map={
-            'yellow': 'yellow',
-            'blue': 'blue',
-            'red': 'red',
-            'green': 'green',
+            'Chunk': 'yellow',
+            'Retrieved Chunk': 'blue',
+            'Query': 'red',
+            'Response': 'green',
         },
         labels={'color': 'Point Type'},
+        title="t-SNE Visualization of Embeddings"
     )
 
     # Use the same shape for all points
     fig.update_traces(marker=dict(symbol='circle', size=8, line=dict(width=1, color='DarkSlateGrey')))
-    fig.update_layout(legend=dict(itemsizing='constant'))
+    fig.update_layout(
+        legend=dict(
+            title="Point Type",
+            itemsizing='constant',
+            font=dict(size=12),
+        )
+    )
     return fig
