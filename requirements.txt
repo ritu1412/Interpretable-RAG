@@ -133,3 +133,4 @@ websocket-client==1.8.0
 websockets==14.1
 wrapt==1.17.0
 zipp==3.21.0
+pysqlite3-binary

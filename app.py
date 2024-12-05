@@ -1,3 +1,7 @@
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
 import streamlit as st
 from ocr import extract_text_from_pdf
 from chunking import chunk_text_fixed_size, chunk_text_by_sentence
