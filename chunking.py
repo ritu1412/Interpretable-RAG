@@ -7,7 +7,7 @@ def chunk_text_fixed_size(text, chunk_size=500):
     return chunks
 
 def chunk_text_by_sentence(text, sentences_per_chunk=5):
-    nltk.download('punkt', quiet=True)
+    nltk.download('punkt_tab', quiet=True)
     sentences = nltk.tokenize.sent_tokenize(text)
     chunks = [' '.join(sentences[i:i+sentences_per_chunk]) for i in range(0, len(sentences), sentences_per_chunk)]
     return chunks

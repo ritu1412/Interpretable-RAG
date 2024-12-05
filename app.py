@@ -1,6 +1,8 @@
 __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+import nltk
+nltk.download('punkt')
 
 import streamlit as st
 from ocr import extract_text_from_pdf
@@ -11,8 +13,6 @@ from constants import OPENAI_API_KEY, EMBEDDING_MODEL, EMBEDDING_DIMENSIONS
 import openai
 import os
 import chromadb
-import nltk
-nltk.download('punkt')
 
 openai.api_key = OPENAI_API_KEY
 
