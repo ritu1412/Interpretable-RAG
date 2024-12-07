@@ -9,7 +9,7 @@ from ocr import extract_text_from_pdf
 from chunking import chunk_text_fixed_size, chunk_text_by_sentence
 from retrieval import index_chunks, retrieve_similar_chunks
 from tsne import get_embeddings, plot_tsne
-from constants import OPENAI_API_KEY, EMBEDDING_MODEL, EMBEDDING_DIMENSIONS
+from constants import CHROMADB_DIR, OPENAI_API_KEY, EMBEDDING_MODEL, EMBEDDING_DIMENSIONS
 import openai
 import os
 import chromadb
@@ -45,6 +45,9 @@ def render_tool_section():
     # File uploader
     uploaded_file = st.file_uploader("Upload a PDF file", type=["pdf"])
     if uploaded_file is not None:
+        #clear the sqlite database
+        client = chromadb.PersistentClient(path=CHROMADB_DIR)
+        client.reset()
         # Save uploaded file to disk
         pdf_path = 'uploaded.pdf'
         with open(pdf_path, 'wb') as f:
@@ -118,7 +121,7 @@ def render_tool_section():
         # Clean up uploaded file
         if os.path.exists(pdf_path):
             os.remove(pdf_path)
-
+    
 
 def main():
     st.sidebar.title("Navigation")
